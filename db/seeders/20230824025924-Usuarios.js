@@ -4,6 +4,19 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Usuarios', [
       {
+        dni: 26777239,
+        nombre: 'Super',
+        apellido: 'Usuario',
+        email: 'equivalenciasunahuruniversidad@gmail.com',
+        discord: '@superusuariounahur',
+        telefono: 1123708547,
+        rol: 'superusuario',
+        password:
+          '$2a$10$qexg1PA7.ftsJhjooL05gusHAe2in.5dgh6J0LmY3s6Sj1Dc1nanK', // unahur
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
         dni: 30563652,
         nombre: 'Enzo',
         apellido: 'Fernandez',
@@ -95,19 +108,6 @@ module.exports = {
         rol: 'alumno',
         password:
           '$2a$10$inDbJETIz.TPr94Nm.ji1OdG3VthyTeh2bJQqufPFUA/LTxJPxBGi', // 1525gty
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        dni: 26777239,
-        nombre: 'Super',
-        apellido: 'Usuario',
-        email: 'equivalenciasunahuruniversidad@gmail.com',
-        discord: '@superusuariounahur',
-        telefono: 1123708547,
-        rol: 'superusuario',
-        password:
-          '$2a$10$qexg1PA7.ftsJhjooL05gusHAe2in.5dgh6J0LmY3s6Sj1Dc1nanK', // unahur
         createdAt: new Date(),
         updatedAt: new Date(),
       },
