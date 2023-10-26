@@ -15,6 +15,7 @@ module.exports = {
           '$2a$10$M4dYt2R7CPZ/q0Gtttpo7OGw5YJhDQvi6q8khqNQSP.jUocR83aCK', // prueba
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Habilitado',
       },
 
       {
@@ -29,6 +30,7 @@ module.exports = {
           '$2a$10$r6SlkIBD22flPu5Ib4sqzeMji9yNrzWEyVLuGrvUb8G2LDC.bC//W', // 12345
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Habilitado',
       },
 
       {
@@ -43,6 +45,7 @@ module.exports = {
           '$2a$10$S5EG.o3lmKwf7kKfaWT0AOU6bPdq2LzXAOL5NlvT/gIKpOOAHb4nK', //monumental
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Habilitado',
       },
       {
         dni: 35563675,
@@ -56,6 +59,7 @@ module.exports = {
           '$2a$10$ZTTxZyLvt/F93BwPs/M1vOYvChNeOd/0YxZKGxwCkpb8Q78edm4dC', // milan
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Habilitado',
       },
       {
         dni: 35563652,
@@ -69,6 +73,7 @@ module.exports = {
           '$2a$10$GokC4Ped877ec6VqbXJObeD5gbfj.FMFtIYpL.V7UtMzcBZ2VoAmW', // 5959
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Habilitado',
       },
 
       {
@@ -83,6 +88,7 @@ module.exports = {
           '$2a$10$qexg1PA7.ftsJhjooL05gusHAe2in.5dgh6J0LmY3s6Sj1Dc1nanK', // unahur
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Habilitado',
       },
 
       {
@@ -97,6 +103,7 @@ module.exports = {
           '$2a$10$inDbJETIz.TPr94Nm.ji1OdG3VthyTeh2bJQqufPFUA/LTxJPxBGi', // 1525gty
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Deshabilitado',
       },
       {
         dni: 26777239,
@@ -110,6 +117,7 @@ module.exports = {
           '$2a$10$qexg1PA7.ftsJhjooL05gusHAe2in.5dgh6J0LmY3s6Sj1Dc1nanK', // unahur
         createdAt: new Date(),
         updatedAt: new Date(),
+        estado: 'Habilitado',
       },
     ]);
   },
