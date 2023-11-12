@@ -8,7 +8,7 @@
     "build": "run-s clean transpile",
     "server": "node ./dist/bin/www",
     "dev": "cross-env NODE_ENV=development run-s build server",
-    "prod": "cross-env NODE_ENV=production run-s build server",
+    "prod": "cross-env NODE_ENV=production run-s transpile db:migrate build server",
     "clean": "rimraf dist",
     "db:init": "run-s transpile db:migrate",
     "db:migrate": "sequelize db:migrate",
