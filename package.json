@@ -6,6 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon ",
     "start:test": "cross-env NODE_ENV=test nodemon ",
+    "build_no_clean": "npm cache clean --force && npm install && npm run transpile",
     "build": "npm cache clean --force && npm install && npm run clean && npm run transpile",
     "server": "node ./dist/bin/www",
     "dev": "run-s build server",
@@ -16,8 +17,8 @@
     "db:seed": "sequelize db:seed",
     "db:seedall": "sequelize db:seed:all",
     "transpile": "npm run transpile:lib && npm run transpile:bin",
-    "transpile:lib": "npx @babel/cli ./lib --out-dir dist/lib --copy-files --source-maps",
-    "transpile:bin": "npx @babel/cli ./bin --out-dir dist/bin --copy-files --source-maps",
+    "transpile:lib": "npx babel ./lib --out-dir dist/lib --copy-files --source-maps",
+    "transpile:bin": "npx babel ./bin --out-dir dist/bin --copy-files --source-maps",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --fix ./lib",
     "lint:prettier": "prettier --write ./lib",
@@ -97,6 +98,6 @@
     "*.{js,css,md}": "prettier --write"
   },
   "engines": {
-    "node": "20.12.x"
+    "node": "20"
   }
 }
