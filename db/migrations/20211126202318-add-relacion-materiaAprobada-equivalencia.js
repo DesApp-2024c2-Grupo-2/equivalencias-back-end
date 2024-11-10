@@ -38,35 +38,27 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.addColumn(
-      // Nombre de la tabla
-      'Materia_aprobada',
-      // Nombre de la columna nueva
-      'EquivalenciumId',
-      // Detalles de la columna nueva
-      {
-        // Tipo de datos
+    // Describir la tabla para verificar si la columna ya existe
+    const tableDescription = await queryInterface.describeTable(
+      'Materia_aprobada'
+    );
+
+    // Verificar si la columna "EquivalenciumId" ya existe
+    if (!tableDescription.EquivalenciumId) {
+      await queryInterface.addColumn('Materia_aprobada', 'EquivalenciumId', {
         type: Sequelize.INTEGER,
-        // Referencia a otra tabla porque es una FK
         references: {
           model: 'Equivalencia',
           key: 'id',
         },
-        // Qué pasa cuando se actualiza el id en la tabla referenciada
         onUpdate: 'CASCADE',
-        // Qué pasa cuando se elimina el id en la tabla referenciada
-        onDelete: 'SET NULL', // Puedes cambiar a 'CASCADE' si deseas eliminar registros dependientes
-        allowNull: true, // Permitir valores NULL en caso de que no se pueda establecer la relación
-      }
-    );
+        onDelete: 'SET NULL', // Deja 'SET NULL' en lugar de vacío
+        allowNull: true, // Permitir valores nulos si es necesario
+      });
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn(
-      // Nombre de la tabla
-      'Materia_aprobada',
-      // Nombre de la columna que se elimina
-      'EquivalenciumId'
-    );
+    return queryInterface.removeColumn('Materia_aprobada', 'EquivalenciumId');
   },
 };
