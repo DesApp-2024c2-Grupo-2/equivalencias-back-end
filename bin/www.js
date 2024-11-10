@@ -19,7 +19,9 @@ const server = http.createServer(app);
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: '*',
+    origin: 'https://equivalencias-front-end-2c2024.onrender.com', // Cambia esto al dominio correcto de tu frontend
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
