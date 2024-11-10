@@ -3,7 +3,7 @@
 // me inspiré en
 // https://medium.com/@andrewoons/how-to-define-sequelize-associations-using-migrations-de4333bf75a7
 
-module.exports = {
+/*module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.addColumn(
       // en que tabla
@@ -31,6 +31,42 @@ module.exports = {
       // en que tabla
       'Materia_aprobada',
       // nombre de la columna
+      'UniversidadOrigenId'
+    );
+  },
+};*/
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    // Describir la tabla para verificar si la columna ya existe
+    const tableDescription = await queryInterface.describeTable(
+      'Materia_aprobada'
+    );
+
+    // Verificar si la columna "UniversidadOrigenId" ya existe
+    if (!tableDescription.UniversidadOrigenId) {
+      // Agregar la columna solo si no existe
+      await queryInterface.addColumn(
+        'Materia_aprobada',
+        'UniversidadOrigenId',
+        {
+          type: Sequelize.INTEGER,
+          references: {
+            model: 'Universidad_origen', // Asegúrate de que el nombre de la tabla referenciada esté correcto
+            key: 'id',
+          },
+          onUpdate: 'CASCADE',
+          onDelete: 'SET NULL', // Especifica la acción de borrado
+          allowNull: true, // Permitir valores nulos si es necesario
+        }
+      );
+    }
+  },
+
+  down: async (queryInterface, Sequelize) => {
+    // Remover la columna
+    return queryInterface.removeColumn(
+      'Materia_aprobada',
       'UniversidadOrigenId'
     );
   },
