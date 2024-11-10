@@ -38,9 +38,10 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // Describir la tabla para verificar si la columna ya existe
     const tableDescription = await queryInterface.describeTable('Equivalencia');
 
-    // Verificar si la columna "UsuarioId" ya existe
+    // Agregar la columna "UsuarioId" solo si no existe
     if (!tableDescription.UsuarioId) {
       await queryInterface.addColumn('Equivalencia', 'UsuarioId', {
         type: Sequelize.INTEGER,
@@ -48,30 +49,30 @@ module.exports = {
           model: 'Usuarios', // Referencia a la tabla 'Usuarios'
           key: 'id', // Columna de referencia en 'Usuarios'
         },
-        onUpdate: 'CASCADE', // Si se actualiza el usuario, actualiza el 'UsuarioId' en 'Equivalencia'
-        onDelete: 'SET NULL', // Si se elimina un usuario, pone el 'UsuarioId' en NULL
-        allowNull: false, // Si un 'Equivalencia' requiere un 'UsuarioId'
+        onUpdate: 'CASCADE', // Actualizar en cascada
+        onDelete: 'SET NULL', // Poner en NULL si se elimina
+        allowNull: true, // Permitir valores NULL para evitar errores
       });
     }
 
-    // Verificar duplicaciones y luego insertar solo si no existen
-    const existingData = await queryInterface.sequelize.query(
-      `SELECT * FROM "Equivalencia" WHERE "UsuarioId" = 1 AND "CarreraId" = 1`,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
+    // Evitar insertar datos duplicados
+    const [
+      existingData,
+    ] = await queryInterface.sequelize.query(
+      `SELECT COUNT(*) AS count FROM "Equivalencia" WHERE "instituto" = 'Untref' AND "estado" = 'pendiente' AND "carrera" = 'Ingeniería en sistemas en equivalencia' AND "observaciones" = 'falta analítico' AND "UsuarioId" = 1 AND "CarreraId" = 1`,
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
 
-    // Insertar solo si no existen duplicados
-    if (existingData.length === 0) {
+    // Solo insertar si no hay duplicados
+    if (existingData.count === 0) {
       await queryInterface.bulkInsert('Equivalencia', [
         {
           instituto: 'Untref',
           estado: 'pendiente',
           carrera: 'Ingeniería en sistemas en equivalencia',
           observaciones: 'falta analítico',
-          UsuarioId: 1, // Usa el id del usuario correspondiente
-          CarreraId: 1, // Usa el id de la carrera correspondiente
+          UsuarioId: 1, // ID de usuario específico
+          CarreraId: 1, // ID de carrera específica
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -82,6 +83,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn('Equivalencia', 'UsuarioId');
+    // Eliminar la columna "UsuarioId" al deshacer la migración
+    await queryInterface.removeColumn('Equivalencia', 'UsuarioId');
   },
 };
