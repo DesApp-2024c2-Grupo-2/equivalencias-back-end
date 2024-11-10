@@ -45,11 +45,12 @@ module.exports = {
       await queryInterface.addColumn('Equivalencia', 'UsuarioId', {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Usuarios',
-          key: 'id',
+          model: 'Usuarios', // Referencia a la tabla 'Usuarios'
+          key: 'id', // Columna de referencia en 'Usuarios'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE', // Si se actualiza el usuario, actualiza el 'UsuarioId' en 'Equivalencia'
+        onDelete: 'SET NULL', // Si se elimina un usuario, pone el 'UsuarioId' en NULL
+        allowNull: false, // Si un 'Equivalencia' requiere un 'UsuarioId'
       });
     }
 
@@ -67,8 +68,8 @@ module.exports = {
         {
           instituto: 'Untref',
           estado: 'pendiente',
-          carrera: 'Ingenieria en sistemas en equivalencia',
-          observaciones: 'falta analitico',
+          carrera: 'Ingeniería en sistemas en equivalencia',
+          observaciones: 'falta analítico',
           UsuarioId: 1, // Usa el id del usuario correspondiente
           CarreraId: 1, // Usa el id de la carrera correspondiente
           createdAt: new Date(),
