@@ -10,7 +10,7 @@
     "build": "npm cache clean --force && npm install && npm run clean && npm run transpile",
     "server": "node ./dist/bin/www",
     "dev": "run-s build server",
-    "prod": "run-s transpile db:init && run-s db:seed && run-s server",
+    "prod": "run-s transpile db:init && run-s db:seedall && run-s server",
     "clean": "rm -rf dist",
     "db:init": "run-s transpile db:migrate",
     "db:migrate": "sequelize db:migrate",
