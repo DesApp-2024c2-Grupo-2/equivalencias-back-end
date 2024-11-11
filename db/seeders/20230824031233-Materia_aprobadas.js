@@ -254,34 +254,6 @@ module.exports = {
       return resultado[0].id;
     };
 
-    // Función para insertar los registros de "Equivalencia"
-    const insertarEquivalencium = async (id, nombre) => {
-      const resultado = await queryInterface.sequelize.query(
-        `SELECT id FROM "Equivalencia" WHERE id = :id`,
-        {
-          replacements: { id },
-          type: queryInterface.sequelize.QueryTypes.SELECT,
-        }
-      );
-
-      if (resultado.length === 0) {
-        console.warn(
-          `No se encontró el equivalente con id ${id}. Insertando...`
-        );
-        await queryInterface.bulkInsert('Equivalencia', [
-          {
-            id,
-            nombre: nombre,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ]);
-        return id;
-      }
-
-      return resultado[0].id;
-    };
-
     try {
       // Asegurarse de que las tablas necesarias existen antes de insertar datos
       const tablas = await queryInterface.sequelize.query(
@@ -332,9 +304,24 @@ module.exports = {
             allowNull: false,
             autoIncrement: true,
           },
-          nombre: {
+          instituto: {
             type: Sequelize.STRING,
             allowNull: false,
+          },
+          estado: {
+            type: Sequelize.STRING,
+          },
+          carrera: {
+            type: Sequelize.STRING,
+          },
+          observaciones: {
+            type: Sequelize.STRING,
+          },
+          UsuarioId: {
+            type: Sequelize.INTEGER,
+          },
+          CarreraId: {
+            type: Sequelize.INTEGER,
           },
           createdAt: {
             type: Sequelize.DATE,
@@ -346,13 +333,6 @@ module.exports = {
           },
         });
       }
-
-      // Insertar los equivalentes
-      const equi1 = await insertarEquivalencium(1, 'Equivalente A');
-      const equi2 = await insertarEquivalencium(2, 'Equivalente B');
-      const equi3 = await insertarEquivalencium(3, 'Equivalente C');
-      const equi4 = await insertarEquivalencium(4, 'Equivalente D');
-      const equi5 = await insertarEquivalencium(5, 'Equivalente E');
 
       // Insertar universidades
       const cod1 = await verificarOInsertarUniversidad(
@@ -394,7 +374,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Gramática I',
           certificado: true,
-          EquivalenciumId: equi1,
+          EquivalenciumId: 1,
           UniversidadOrigenId: cod1,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -405,7 +385,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Programacion 1',
           certificado: true,
-          EquivalenciumId: equi2,
+          EquivalenciumId: 2,
           UniversidadOrigenId: cod2,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -416,7 +396,7 @@ module.exports = {
           año_aprobacion: '20201125',
           nombre_materia: 'Quimica General',
           certificado: false,
-          EquivalenciumId: equi3,
+          EquivalenciumId: 3,
           UniversidadOrigenId: cod3,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -427,7 +407,7 @@ module.exports = {
           año_aprobacion: '20191120',
           nombre_materia: 'Pedagogía I',
           certificado: false,
-          EquivalenciumId: equi4,
+          EquivalenciumId: 4,
           UniversidadOrigenId: cod4,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -438,7 +418,7 @@ module.exports = {
           año_aprobacion: '20181209',
           nombre_materia: 'Programación con Objetos I',
           certificado: true,
-          EquivalenciumId: equi5,
+          EquivalenciumId: 5,
           UniversidadOrigenId: cod5,
           createdAt: new Date(),
           updatedAt: new Date(),
