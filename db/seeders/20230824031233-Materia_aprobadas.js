@@ -205,10 +205,10 @@ module.exports = {
       return resultado[0].id;
     };
 
-    // Función para insertar los registros de "Equivalencium"
-    const insertarEquivalencium = async (id, nombre) => {
+    // Función para insertar los registros de "Equivalencia"
+    const insertarEquivalencia = async (id, nombre) => {
       const resultado = await queryInterface.sequelize.query(
-        `SELECT id FROM "Equivalencium" WHERE id = :id`,
+        `SELECT id FROM "Equivalencia" WHERE id = :id`, // Cambié "Equivalencium" por "Equivalencia"
         {
           replacements: { id },
           type: queryInterface.sequelize.QueryTypes.SELECT,
@@ -219,7 +219,8 @@ module.exports = {
         console.warn(
           `No se encontró el equivalente con id ${id}. Insertando...`
         );
-        await queryInterface.bulkInsert('Equivalencium', [
+        await queryInterface.bulkInsert('Equivalencia', [
+          // Cambié "Equivalencium" por "Equivalencia"
           {
             id,
             nombre: nombre,
@@ -234,24 +235,25 @@ module.exports = {
     };
 
     try {
-      // Asegurarse de que la tabla "Equivalencium" existe antes de insertar datos
+      // Asegurarse de que la tabla "Equivalencia" existe antes de insertar datos
       const tablas = await queryInterface.sequelize.query(
         `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'`,
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 
-      if (!tablas.some((table) => table.table_name === 'Equivalencium')) {
+      if (!tablas.some((table) => table.table_name === 'Equivalencia')) {
+        // Cambié "Equivalencium" por "Equivalencia"
         throw new Error(
-          'La tabla "Equivalencium" no existe en la base de datos.'
+          'La tabla "Equivalencia" no existe en la base de datos.' // Cambié "Equivalencium" por "Equivalencia"
         );
       }
 
       // Insertar los equivalentes
-      const equi1 = await insertarEquivalencium(1, 'Equivalente A');
-      const equi2 = await insertarEquivalencium(2, 'Equivalente B');
-      const equi3 = await insertarEquivalencium(3, 'Equivalente C');
-      const equi4 = await insertarEquivalencium(4, 'Equivalente D');
-      const equi5 = await insertarEquivalencium(5, 'Equivalente E');
+      const equi1 = await insertarEquivalencia(1, 'Equivalente A'); // Cambié "Equivalencium" por "Equivalencia"
+      const equi2 = await insertarEquivalencia(2, 'Equivalente B'); // Cambié "Equivalencium" por "Equivalencia"
+      const equi3 = await insertarEquivalencia(3, 'Equivalente C'); // Cambié "Equivalencium" por "Equivalencia"
+      const equi4 = await insertarEquivalencia(4, 'Equivalente D'); // Cambié "Equivalencium" por "Equivalencia"
+      const equi5 = await insertarEquivalencia(5, 'Equivalente E'); // Cambié "Equivalencium" por "Equivalencia"
 
       // Insertar universidades
       const cod1 = await verificarOInsertarUniversidad(
@@ -293,7 +295,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Gramática I',
           certificado: true,
-          EquivalenciumId: equi1,
+          EquivalenciaId: equi1, // Cambié "EquivalenciumId" por "EquivalenciaId"
           UniversidadOrigenId: cod1,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -304,7 +306,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Programacion 1',
           certificado: true,
-          EquivalenciumId: equi2,
+          EquivalenciaId: equi2, // Cambié "EquivalenciumId" por "EquivalenciaId"
           UniversidadOrigenId: cod2,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -315,7 +317,7 @@ module.exports = {
           año_aprobacion: '20201125',
           nombre_materia: 'Quimica General',
           certificado: false,
-          EquivalenciumId: equi3,
+          EquivalenciaId: equi3, // Cambié "EquivalenciumId" por "EquivalenciaId"
           UniversidadOrigenId: cod3,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -326,7 +328,7 @@ module.exports = {
           año_aprobacion: '20191120',
           nombre_materia: 'Pedagogía I',
           certificado: false,
-          EquivalenciumId: equi4,
+          EquivalenciaId: equi4, // Cambié "EquivalenciumId" por "EquivalenciaId"
           UniversidadOrigenId: cod4,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -337,7 +339,7 @@ module.exports = {
           año_aprobacion: '20181209',
           nombre_materia: 'Programación con Objetos I',
           certificado: true,
-          EquivalenciumId: equi5,
+          EquivalenciaId: equi5, // Cambié "EquivalenciumId" por "EquivalenciaId"
           UniversidadOrigenId: cod5,
           createdAt: new Date(),
           updatedAt: new Date(),
