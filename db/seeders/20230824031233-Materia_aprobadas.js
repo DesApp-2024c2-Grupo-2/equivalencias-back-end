@@ -254,10 +254,10 @@ module.exports = {
       return resultado[0].id;
     };
 
-    // Función para insertar los registros de "Equivalencium"
+    // Función para insertar los registros de "Equivalencia"
     const insertarEquivalencium = async (id, nombre) => {
       const resultado = await queryInterface.sequelize.query(
-        `SELECT id FROM "Equivalencia" WHERE id = :id`, // Cambié "Equivalencium" por "Equivalencia"
+        `SELECT id FROM "Equivalencia" WHERE id = :id`,
         {
           replacements: { id },
           type: queryInterface.sequelize.QueryTypes.SELECT,
@@ -269,7 +269,6 @@ module.exports = {
           `No se encontró el equivalente con id ${id}. Insertando...`
         );
         await queryInterface.bulkInsert('Equivalencia', [
-          // Cambié "Equivalencium" por "Equivalencia"
           {
             id,
             nombre: nombre,
@@ -284,17 +283,23 @@ module.exports = {
     };
 
     try {
-      // Asegurarse de que la tabla "Equivalencia" existe antes de insertar datos
+      // Asegurarse de que las tablas necesarias existen antes de insertar datos
       const tablas = await queryInterface.sequelize.query(
         `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'`,
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 
+      // Verificar que las tablas "Universidad_origen" y "Equivalencia" existan
+      if (!tablas.some((table) => table.table_name === 'Universidad_origen')) {
+        throw new Error(
+          'La tabla "Universidad_origen" no existe en la base de datos.'
+        );
+      }
+
       if (!tablas.some((table) => table.table_name === 'Equivalencia')) {
-        // Cambié "Equivalencium" por "Equivalencia"
         throw new Error(
           'La tabla "Equivalencia" no existe en la base de datos.'
-        ); // Cambié "Equivalencium" por "Equivalencia"
+        );
       }
 
       // Insertar los equivalentes
@@ -410,6 +415,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
+    // Eliminar los registros de "Materia_aprobada"
     await queryInterface.bulkDelete('Materia_aprobada', null, {});
   },
 };
