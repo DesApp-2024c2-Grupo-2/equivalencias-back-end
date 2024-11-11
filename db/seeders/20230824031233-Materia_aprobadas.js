@@ -56,9 +56,8 @@
 
     */
 ///////////////////////////////////////////////////
-/*module.exports = {
-      up: async (queryInterface, Sequelize) => {
-
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
     const universidad1 = await queryInterface.sequelize.query(
       // `SELECT id FROM "Universidad_origen" WHERE codigo = '20' `,
       `SELECT id FROM "Universidad_origen" WHERE id = '1' `,
@@ -166,9 +165,9 @@
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Materia_aprobada', null, {});
   },
-};*/
+};
 
-module.exports = {
+/*module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Función para verificar o insertar registros en la tabla "Universidad_origen"
     const verificarOInsertarUniversidad = async (
@@ -363,4 +362,4 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Materia_aprobada', null, {});
   },
-};
+};*/
