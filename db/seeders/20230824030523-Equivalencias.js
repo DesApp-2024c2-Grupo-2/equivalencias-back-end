@@ -159,7 +159,7 @@
 };
 */
 
-'use strict';
+//'use strict';
 
 /*module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -379,26 +379,17 @@ module.exports = {
       );
 
     // Obtener los registros existentes para evitar duplicados
+    const usuarioIds = registrosVálidos.map((registro) => registro.usuarioId);
+    const carreraIds = registrosVálidos.map((registro) => registro.carreraId);
+
     const existingRecords = await queryInterface.sequelize.query(
       `SELECT "UsuarioId", "CarreraId" 
        FROM "Equivalencia" 
-       WHERE "UsuarioId" IN (:usuarioIds) 
-         AND "CarreraId" IN (:carreraIds)`,
+       WHERE "UsuarioId" IN (${usuarioIds.join(',')}) 
+         AND "CarreraId" IN (${carreraIds.join(',')})`,
       {
-        replacements: {
-          usuarioIds: registrosVálidos.map((registro) => registro.usuarioId),
-          carreraIds: registrosVálidos.map((registro) => registro.carreraId),
-        },
         type: queryInterface.sequelize.QueryTypes.SELECT,
       }
-    );
-    console.log(
-      'usuarioIds:',
-      registrosVálidos.map((registro) => registro.usuarioId)
-    );
-    console.log(
-      'carreraIds:',
-      registrosVálidos.map((registro) => registro.carreraId)
     );
 
     // Crear un conjunto de registros existentes para evitar duplicados
