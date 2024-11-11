@@ -115,7 +115,6 @@ module.exports = {
           type: queryInterface.sequelize.QueryTypes.SELECT,
         }
       );
-
       return resultado.length > 0 ? resultado[0].id : null;
     };
 
@@ -155,16 +154,27 @@ module.exports = {
         };
       });
 
-      // Insertar solo si hay registros válidos
-      if (registrosParaInsertar.length > 0) {
-        await queryInterface.bulkInsert(
-          'Materia_solicitada',
-          registrosParaInsertar
+      // Verificar si los registros ya existen antes de insertar
+      for (const registro of registrosParaInsertar) {
+        const existe = await queryInterface.sequelize.query(
+          `SELECT COUNT(*) FROM "Materia_solicitada" WHERE "nombre" = :nombre AND "carrera" = :carrera AND "EquivalenciumId" = :EquivalenciumId`,
+          {
+            replacements: {
+              nombre: registro.nombre,
+              carrera: registro.carrera,
+              EquivalenciumId: registro.EquivalenciumId,
+            },
+            type: queryInterface.sequelize.QueryTypes.SELECT,
+          }
         );
-        console.log('Registros insertados correctamente.');
-      } else {
-        console.log('No hay registros válidos para insertar.');
+
+        // Insertar solo si no existe el registro
+        if (existe[0].count == 0) {
+          await queryInterface.bulkInsert('Materia_solicitada', [registro]);
+        }
       }
+
+      console.log('Registros insertados correctamente, sin duplicados.');
     } catch (error) {
       console.error(
         'Error al obtener las materias o insertar registros:',
