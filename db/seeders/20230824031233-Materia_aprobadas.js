@@ -171,7 +171,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Función para verificar o insertar registros en la tabla "Universidad_origen"
-    const verificarOInsertarUniversidad = async (id, nombre) => {
+    const verificarOInsertarUniversidad = async (id, nombre, localidad) => {
       const resultado = await queryInterface.sequelize.query(
         `SELECT id FROM "Universidad_origen" WHERE id = :id`,
         {
@@ -184,11 +184,12 @@ module.exports = {
         console.warn(
           `No se encontró la universidad con id ${id}. Insertando...`
         );
-        // Inserta el registro con el id y el nombre de la universidad
+        // Inserta el registro con el id, nombre y localidad
         await queryInterface.bulkInsert('Universidad_origen', [
           {
             id,
             nombre_universidad: nombre,
+            localidad: localidad, // Añadir localidad
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -200,12 +201,32 @@ module.exports = {
     };
 
     try {
-      // Verificar o insertar las universidades con un nombre ficticio (puedes actualizar los nombres según corresponda)
-      const cod1 = await verificarOInsertarUniversidad(1, 'Universidad A');
-      const cod2 = await verificarOInsertarUniversidad(2, 'Universidad B');
-      const cod3 = await verificarOInsertarUniversidad(3, 'Universidad C');
-      const cod4 = await verificarOInsertarUniversidad(4, 'Universidad D');
-      const cod5 = await verificarOInsertarUniversidad(5, 'Universidad E');
+      // Verificar o insertar las universidades con el nombre y la localidad
+      const cod1 = await verificarOInsertarUniversidad(
+        1,
+        'Universidad A',
+        'Ciudad A'
+      );
+      const cod2 = await verificarOInsertarUniversidad(
+        2,
+        'Universidad B',
+        'Ciudad B'
+      );
+      const cod3 = await verificarOInsertarUniversidad(
+        3,
+        'Universidad C',
+        'Ciudad C'
+      );
+      const cod4 = await verificarOInsertarUniversidad(
+        4,
+        'Universidad D',
+        'Ciudad D'
+      );
+      const cod5 = await verificarOInsertarUniversidad(
+        5,
+        'Universidad E',
+        'Ciudad E'
+      );
 
       // Crear los registros para la tabla "Materia_aprobada"
       const registrosParaInsertar = [
