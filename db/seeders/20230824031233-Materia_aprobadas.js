@@ -254,10 +254,10 @@ module.exports = {
       return resultado[0].id;
     };
 
-    // Función para insertar los registros de "Equivalencia"
-    const insertarEquivalencia = async (id, nombre) => {
+    // Función para insertar los registros de "Equivalencium"
+    const insertarEquivalencium = async (id, nombre) => {
       const resultado = await queryInterface.sequelize.query(
-        `SELECT id FROM "Equivalencia" WHERE id = :id`,
+        `SELECT id FROM "Equivalencia" WHERE id = :id`, // Cambié "Equivalencium" por "Equivalencia"
         {
           replacements: { id },
           type: queryInterface.sequelize.QueryTypes.SELECT,
@@ -269,6 +269,7 @@ module.exports = {
           `No se encontró el equivalente con id ${id}. Insertando...`
         );
         await queryInterface.bulkInsert('Equivalencia', [
+          // Cambié "Equivalencium" por "Equivalencia"
           {
             id,
             nombre: nombre,
@@ -290,17 +291,18 @@ module.exports = {
       );
 
       if (!tablas.some((table) => table.table_name === 'Equivalencia')) {
+        // Cambié "Equivalencium" por "Equivalencia"
         throw new Error(
           'La tabla "Equivalencia" no existe en la base de datos.'
-        );
+        ); // Cambié "Equivalencium" por "Equivalencia"
       }
 
       // Insertar los equivalentes
-      const equi1 = await insertarEquivalencia(1, 'Equivalente A');
-      const equi2 = await insertarEquivalencia(2, 'Equivalente B');
-      const equi3 = await insertarEquivalencia(3, 'Equivalente C');
-      const equi4 = await insertarEquivalencia(4, 'Equivalente D');
-      const equi5 = await insertarEquivalencia(5, 'Equivalente E');
+      const equi1 = await insertarEquivalencium(1, 'Equivalente A');
+      const equi2 = await insertarEquivalencium(2, 'Equivalente B');
+      const equi3 = await insertarEquivalencium(3, 'Equivalente C');
+      const equi4 = await insertarEquivalencium(4, 'Equivalente D');
+      const equi5 = await insertarEquivalencium(5, 'Equivalente E');
 
       // Insertar universidades
       const cod1 = await verificarOInsertarUniversidad(
@@ -342,7 +344,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Gramática I',
           certificado: true,
-          EquivalenciaId: equi1,
+          EquivalenciumId: equi1,
           UniversidadOrigenId: cod1,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -353,7 +355,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Programacion 1',
           certificado: true,
-          EquivalenciaId: equi2,
+          EquivalenciumId: equi2,
           UniversidadOrigenId: cod2,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -364,7 +366,7 @@ module.exports = {
           año_aprobacion: '20201125',
           nombre_materia: 'Quimica General',
           certificado: false,
-          EquivalenciaId: equi3,
+          EquivalenciumId: equi3,
           UniversidadOrigenId: cod3,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -375,7 +377,7 @@ module.exports = {
           año_aprobacion: '20191120',
           nombre_materia: 'Pedagogía I',
           certificado: false,
-          EquivalenciaId: equi4,
+          EquivalenciumId: equi4,
           UniversidadOrigenId: cod4,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -386,7 +388,7 @@ module.exports = {
           año_aprobacion: '20181209',
           nombre_materia: 'Programación con Objetos I',
           certificado: true,
-          EquivalenciaId: equi5,
+          EquivalenciumId: equi5,
           UniversidadOrigenId: cod5,
           createdAt: new Date(),
           updatedAt: new Date(),
