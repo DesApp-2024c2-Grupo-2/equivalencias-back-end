@@ -170,8 +170,8 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Función para obtener el id de la tabla "Universidad_origen"
-    const obtenerUniversidadId = async (id) => {
+    // Función para verificar o insertar registros en la tabla "Universidad_origen"
+    const verificarOInsertarUniversidad = async (id, nombre) => {
       const resultado = await queryInterface.sequelize.query(
         `SELECT id FROM "Universidad_origen" WHERE id = :id`,
         {
@@ -180,24 +180,29 @@ module.exports = {
         }
       );
 
-      // Verificar si la consulta devolvió resultados
       if (resultado.length === 0) {
-        console.warn(`Advertencia: No se encontró la universidad con id ${id}`);
-        return null; // Devolver null si no se encuentra
+        console.warn(
+          `No se encontró la universidad con id ${id}. Insertando...`
+        );
+        // Inserta el registro si no existe
+        await queryInterface.bulkInsert('Universidad_origen', [
+          { id, nombre, createdAt: new Date(), updatedAt: new Date() },
+        ]);
+        return id;
       }
 
       return resultado[0].id;
     };
 
     try {
-      // Obtener los IDs de las universidades
-      const cod1 = await obtenerUniversidadId(1);
-      const cod2 = await obtenerUniversidadId(2);
-      const cod3 = await obtenerUniversidadId(3);
-      const cod4 = await obtenerUniversidadId(4);
-      const cod5 = await obtenerUniversidadId(5);
+      // Verificar o insertar las universidades
+      const cod1 = await verificarOInsertarUniversidad(1, 'Universidad 1');
+      const cod2 = await verificarOInsertarUniversidad(2, 'Universidad 2');
+      const cod3 = await verificarOInsertarUniversidad(3, 'Universidad 3');
+      const cod4 = await verificarOInsertarUniversidad(4, 'Universidad 4');
+      const cod5 = await verificarOInsertarUniversidad(5, 'Universidad 5');
 
-      // Crear los registros solo si los IDs son válidos
+      // Crear los registros para la tabla "Materia_aprobada"
       const registrosParaInsertar = [
         {
           nota: 7,
@@ -254,21 +259,17 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-      ].filter((registro) => registro.UniversidadOrigenId !== null); // Filtrar los registros inválidos
+      ];
 
-      // Insertar solo si hay registros válidos
-      if (registrosParaInsertar.length > 0) {
-        await queryInterface.bulkInsert(
-          'Materia_aprobada',
-          registrosParaInsertar
-        );
-        console.log('Registros insertados correctamente.');
-      } else {
-        console.log('No hay registros válidos para insertar.');
-      }
+      // Insertar los registros en "Materia_aprobada"
+      await queryInterface.bulkInsert(
+        'Materia_aprobada',
+        registrosParaInsertar
+      );
+      console.log('Registros insertados correctamente.');
     } catch (error) {
       console.error(
-        'Error al obtener las universidades o insertar registros:',
+        'Error al verificar las universidades o insertar registros:',
         error.message
       );
     }
