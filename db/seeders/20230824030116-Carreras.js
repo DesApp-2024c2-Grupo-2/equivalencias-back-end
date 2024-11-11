@@ -7,7 +7,7 @@ module.exports = {
     );
 
     // Si no existe la carrera, entonces insertarla
-    if (!carrera) {
+    if (carrera.length === 0) {
       return queryInterface.bulkInsert('Carrera', [
         {
           nombre_carrera: 'Tecnicatura en informatica',
