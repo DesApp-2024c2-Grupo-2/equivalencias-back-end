@@ -170,103 +170,94 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const universidad1 = await queryInterface.sequelize.query(
-      `SELECT id FROM "Universidad_origen" WHERE id = '1' `,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
-    );
-    const cod1 = universidad1[0].id;
+    // Función para obtener el id de la tabla "Universidad_origen"
+    const obtenerUniversidadId = async (id) => {
+      const resultado = await queryInterface.sequelize.query(
+        `SELECT id FROM "Universidad_origen" WHERE id = :id`,
+        {
+          replacements: { id },
+          type: queryInterface.sequelize.QueryTypes.SELECT,
+        }
+      );
 
-    const universidad2 = await queryInterface.sequelize.query(
-      `SELECT id FROM "Universidad_origen" WHERE id = '2' `,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
+      // Verificar si la consulta devolvió resultados
+      if (resultado.length === 0) {
+        throw new Error(`No se encontró la universidad con id ${id}`);
       }
-    );
-    const cod2 = universidad2[0].id;
 
-    const universidad3 = await queryInterface.sequelize.query(
-      `SELECT id FROM "Universidad_origen" WHERE id = '3' `,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
-    );
-    const cod3 = universidad3[0].id;
+      return resultado[0].id;
+    };
 
-    const universidad4 = await queryInterface.sequelize.query(
-      `SELECT id FROM "Universidad_origen" WHERE id = '4' `,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
-    );
-    const cod4 = universidad4[0].id;
+    try {
+      const cod1 = await obtenerUniversidadId(1);
+      const cod2 = await obtenerUniversidadId(2);
+      const cod3 = await obtenerUniversidadId(3);
+      const cod4 = await obtenerUniversidadId(4);
+      const cod5 = await obtenerUniversidadId(5);
 
-    const universidad5 = await queryInterface.sequelize.query(
-      `SELECT id FROM "Universidad_origen" WHERE id = '5' `,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
-    );
-    const cod5 = universidad5[0].id;
-
-    await queryInterface.bulkInsert('Materia_aprobada', [
-      {
-        nota: 7,
-        carga_horaria: 8,
-        año_aprobacion: '20151003',
-        nombre_materia: 'Gramática I',
-        certificado: true,
-        EquivalenciumId: 1,
-        UniversidadOrigenId: cod1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 9,
-        carga_horaria: 8,
-        año_aprobacion: '20151003',
-        nombre_materia: 'Programacion 1',
-        certificado: true,
-        EquivalenciumId: 2,
-        UniversidadOrigenId: cod2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 7,
-        carga_horaria: 6,
-        año_aprobacion: '20201125',
-        nombre_materia: 'Quimica General',
-        certificado: false,
-        EquivalenciumId: 3,
-        UniversidadOrigenId: cod3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 8,
-        carga_horaria: 8,
-        año_aprobacion: '20191120',
-        nombre_materia: 'Pedagogía I',
-        certificado: false,
-        EquivalenciumId: 4,
-        UniversidadOrigenId: cod4,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 9,
-        carga_horaria: 8,
-        año_aprobacion: '20181209',
-        nombre_materia: 'Programación con Objetos I',
-        certificado: true,
-        EquivalenciumId: 5,
-        UniversidadOrigenId: cod5,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ]);
+      await queryInterface.bulkInsert('Materia_aprobada', [
+        {
+          nota: 7,
+          carga_horaria: 8,
+          año_aprobacion: '20151003',
+          nombre_materia: 'Gramática I',
+          certificado: true,
+          EquivalenciumId: 1,
+          UniversidadOrigenId: cod1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          nota: 9,
+          carga_horaria: 8,
+          año_aprobacion: '20151003',
+          nombre_materia: 'Programacion 1',
+          certificado: true,
+          EquivalenciumId: 2,
+          UniversidadOrigenId: cod2,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          nota: 7,
+          carga_horaria: 6,
+          año_aprobacion: '20201125',
+          nombre_materia: 'Quimica General',
+          certificado: false,
+          EquivalenciumId: 3,
+          UniversidadOrigenId: cod3,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          nota: 8,
+          carga_horaria: 8,
+          año_aprobacion: '20191120',
+          nombre_materia: 'Pedagogía I',
+          certificado: false,
+          EquivalenciumId: 4,
+          UniversidadOrigenId: cod4,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          nota: 9,
+          carga_horaria: 8,
+          año_aprobacion: '20181209',
+          nombre_materia: 'Programación con Objetos I',
+          certificado: true,
+          EquivalenciumId: 5,
+          UniversidadOrigenId: cod5,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    } catch (error) {
+      console.error(
+        'Error al obtener las universidades o insertar registros:',
+        error.message
+      );
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
