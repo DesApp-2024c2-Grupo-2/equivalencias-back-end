@@ -385,14 +385,12 @@ module.exports = {
       `SELECT id FROM "Usuarios" WHERE id IN (369, 370, 371, 372, 373)`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
-    console.log('Usuarios obtenidos:', usuarios);
 
     // Obtener carreras
     const carreras = await queryInterface.sequelize.query(
       `SELECT id, nombre_carrera FROM "Carrera" WHERE nombre_carrera IN ('Tecnicatura en informatica', 'Profesorado de Ingles', 'Lic. en Biotecnologia', 'Lic. en Educacion', 'Tec. en Metalurgica')`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
-    console.log('Carreras obtenidas:', carreras);
 
     // Crear mapas de usuarios y carreras para facilitar el acceso a los IDs
     const usuariosMap = usuarios.reduce((acc, usuario) => {
@@ -405,9 +403,6 @@ module.exports = {
       return acc;
     }, {});
 
-    console.log('Mapa de usuarios:', usuariosMap);
-    console.log('Mapa de carreras:', carrerasMap);
-
     // Filtrar registros válidos
     const registrosVálidos = checks
       .map(
@@ -419,12 +414,11 @@ module.exports = {
           instituto,
           estado,
         }) => {
-          // Verificar que el instituto no sea nulo o indefinido
           if (!instituto) {
             console.error(
               `Instituto faltante para usuarioId: ${usuarioId}, carrera: ${carrera}`
             );
-            return null; // Retornar null si el instituto está vacío
+            return null;
           }
           return {
             usuarioId,
@@ -436,36 +430,32 @@ module.exports = {
           };
         }
       )
-      .filter((item) => item !== null); // Filtrar los elementos nulos
+      .filter((item) => item !== null);
 
-    console.log('Registros válidos para insertar:', registrosVálidos);
-
-    // Verifica si hay registros válidos antes de intentar insertar
     if (registrosVálidos.length > 0) {
-      // Preparar datos para la inserción con datos dinámicos
-      const datosParaInsertar = registrosVálidos.map(
-        ({
-          usuarioId,
-          carreraId,
-          carrera,
-          observaciones,
-          instituto,
-          estado,
-        }) => ({
-          instituto,
-          estado,
-          carrera,
-          observaciones,
-          UsuarioId: usuarioId,
-          CarreraId: carreraId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
-      );
+      for (const registro of registrosVálidos) {
+        // Verificar si el registro ya existe en la tabla
+        const existe = await queryInterface.sequelize.query(
+          `SELECT * FROM "Equivalencia" WHERE "UsuarioId" = ${registro.usuarioId} AND "CarreraId" = ${registro.carreraId}`,
+          { type: queryInterface.sequelize.QueryTypes.SELECT }
+        );
 
-      // Usar bulkInsert para insertar los datos
-      await queryInterface.bulkInsert('Equivalencia', datosParaInsertar);
-      console.log('Registros insertados correctamente:', datosParaInsertar);
+        // Si el registro no existe, agregarlo
+        if (existe.length === 0) {
+          await queryInterface.bulkInsert('Equivalencia', [
+            {
+              instituto: registro.instituto,
+              estado: registro.estado,
+              carrera: registro.carrera,
+              observaciones: registro.observaciones,
+              UsuarioId: registro.usuarioId,
+              CarreraId: registro.carreraId,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          ]);
+        }
+      }
     } else {
       console.log('No hay registros válidos para insertar.');
     }
