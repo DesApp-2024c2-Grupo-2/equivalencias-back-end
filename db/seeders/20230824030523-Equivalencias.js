@@ -336,7 +336,6 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Definir las verificaciones en un array
     const checks = [
       { usuarioId: 1, carreraNombre: 'Tecnicatura en informatica' },
       { usuarioId: 3, carreraNombre: 'Profesorado de Ingles' },
@@ -350,14 +349,16 @@ module.exports = {
       `SELECT id FROM "Usuarios" WHERE id IN (1, 3, 4, 5, 6)`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
+    console.log('Usuarios encontrados:', usuarios);
 
     // Obtener carreras
     const carreras = await queryInterface.sequelize.query(
       `SELECT id, nombre_carrera FROM "Carrera" WHERE nombre_carrera IN ('Tecnicatura en informatica', 'Profesorado de Ingles', 'Lic. en Biotecnologia', 'Lic. en Educacion', 'Tec. en Metalurgica')`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
+    console.log('Carreras encontradas:', carreras);
 
-    // Crear mapas de usuarios y carreras para facilitar el acceso a los IDs
+    // Crear mapas de usuarios y carreras
     const usuariosMap = usuarios.reduce((acc, usuario) => {
       acc[usuario.id] = usuario.id;
       return acc;
@@ -378,47 +379,39 @@ module.exports = {
         ({ usuarioId, carreraId }) => usuariosMap[usuarioId] && carreraId
       );
 
-    // Obtener los registros existentes para evitar duplicados
     const usuarioIds = registrosVálidos.map((registro) => registro.usuarioId);
     const carreraIds = registrosVálidos.map((registro) => registro.carreraId);
 
-    // Verificar que las listas no estén vacías
     if (usuarioIds.length === 0 || carreraIds.length === 0) {
       console.log('No hay registros válidos para procesar.');
       return;
     }
 
-    // Ejecutar la consulta para obtener los registros existentes
     const existingRecords = await queryInterface.sequelize.query(
       `SELECT "UsuarioId", "CarreraId" 
        FROM "Equivalencia" 
        WHERE "UsuarioId" IN (${usuarioIds.join(',')}) 
          AND "CarreraId" IN (${carreraIds.join(',')})`,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
 
-    // Crear un conjunto de registros existentes para evitar duplicados
     const existingRecordsSet = new Set(
       existingRecords.map((record) => `${record.UsuarioId}-${record.CarreraId}`)
     );
 
-    // Filtrar registros válidos que no estén ya en la tabla Equivalencia
     const registrosParaInsertar = registrosVálidos.filter(
       ({ usuarioId, carreraId }) =>
         !existingRecordsSet.has(`${usuarioId}-${carreraId}`)
     );
 
-    // Insertar solo los registros que no existan
     if (registrosParaInsertar.length > 0) {
       await queryInterface.bulkInsert(
         'Equivalencia',
         registrosParaInsertar.map(({ usuarioId, carreraId }) => ({
-          instituto: 'Untref', // Personaliza esto si es necesario
-          estado: 'pendiente', // Personaliza esto si es necesario
-          carrera: 'Ingenieria en sistemas', // Personaliza esto si es necesario
-          observaciones: 'falta analitico', // Personaliza esto si es necesario
+          instituto: 'Untref',
+          estado: 'pendiente',
+          carrera: 'Ingenieria en sistemas',
+          observaciones: 'falta analitico',
           UsuarioId: usuarioId,
           CarreraId: carreraId,
           createdAt: new Date(),
@@ -431,7 +424,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    // Eliminar todos los registros de la tabla Equivalencia
     await queryInterface.bulkDelete('Equivalencia', null, {});
   },
 };
