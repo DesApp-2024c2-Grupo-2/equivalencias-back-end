@@ -410,15 +410,33 @@ module.exports = {
 
     // Filtrar registros válidos
     const registrosVálidos = checks
-      .map(({ usuarioId, carreraNombre, carrera, observaciones }) => ({
-        usuarioId,
-        carreraId: carrerasMap[carreraNombre],
-        carrera,
-        observaciones,
-      }))
-      .filter(
-        ({ usuarioId, carreraId }) => usuariosMap[usuarioId] && carreraId
-      );
+      .map(
+        ({
+          usuarioId,
+          carreraNombre,
+          carrera,
+          observaciones,
+          instituto,
+          estado,
+        }) => {
+          // Verificar que el instituto no sea nulo o indefinido
+          if (!instituto) {
+            console.error(
+              `Instituto faltante para usuarioId: ${usuarioId}, carrera: ${carrera}`
+            );
+            return null; // Retornar null si el instituto está vacío
+          }
+          return {
+            usuarioId,
+            carreraId: carrerasMap[carreraNombre],
+            carrera,
+            observaciones,
+            instituto,
+            estado,
+          };
+        }
+      )
+      .filter((item) => item !== null); // Filtrar los elementos nulos
 
     console.log('Registros válidos para insertar:', registrosVálidos);
 
