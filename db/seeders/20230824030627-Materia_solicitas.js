@@ -122,7 +122,7 @@ module.exports = {
     try {
       // Intentar obtener las IDs de las materias solicitadas
       const idsEquivalencia = [];
-      for (let id = 1; id <= 5; id++) {
+      for (let id = 284; id <= 288; id++) {
         const materiaId = await obtenerMateriaId(id);
         if (materiaId) {
           idsEquivalencia.push({ id, materiaId });
