@@ -347,7 +347,7 @@ module.exports = {
 
     // Obtener usuarios
     const usuarios = await queryInterface.sequelize.query(
-      `SELECT id FROM "Usuarios" WHERE id IN (1, 3, 4, 5, 6)`,
+      `SELECT id FROM "Usuarios" WHERE id IN (369, 370, 371, 372, 373)`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
 
