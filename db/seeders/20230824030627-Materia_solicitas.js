@@ -116,68 +116,73 @@ module.exports = {
         }
       );
 
-      // Verificar si se encontró el resultado
-      if (resultado.length === 0) {
-        throw new Error(`No se encontró la materia con id ${id}`);
-      }
-
-      return resultado[0].id;
+      return resultado.length > 0 ? resultado[0].id : null;
     };
 
     try {
-      const matsolicitada1 = await obtenerMateriaId(1);
-      const matsolicitada2 = await obtenerMateriaId(2);
-      const matsolicitada3 = await obtenerMateriaId(3);
-      const matsolicitada4 = await obtenerMateriaId(4);
-      const matsolicitada5 = await obtenerMateriaId(5);
+      // Intentar obtener las IDs de las materias solicitadas
+      const idsEquivalencia = [];
+      for (let id = 1; id <= 5; id++) {
+        const materiaId = await obtenerMateriaId(id);
+        if (materiaId) {
+          idsEquivalencia.push({ id, materiaId });
+        } else {
+          console.warn(`Advertencia: No se encontró la materia con id ${id}`);
+        }
+      }
 
-      await queryInterface.bulkInsert('Materia_solicitada', [
-        {
-          id: 1,
-          nombre: 'Introducción a la Programación',
-          carrera: 'Tecnicatura en informatica',
-          estado: 'pendiente',
-          EquivalenciumId: matsolicitada1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: 2,
-          nombre: 'Gramatica 1',
-          carrera: 'Profesorado de Ingles',
-          estado: 'pendiente',
-          EquivalenciumId: matsolicitada2,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: 3,
-          nombre: 'Biologia General',
-          carrera: 'Lic. en Biotecnologia',
-          estado: 'pendiente',
-          EquivalenciumId: matsolicitada3,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: 4,
-          nombre: 'Pedagogía I',
-          carrera: 'Lic. en Educacion',
-          estado: 'pendiente',
-          EquivalenciumId: matsolicitada4,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: 5,
-          nombre: 'Metalurgia l',
-          carrera: 'Tec. en Metalurgica',
-          estado: 'pendiente',
-          EquivalenciumId: matsolicitada5,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
+      // Crear los registros solo para las IDs que se encontraron
+      const registrosParaInsertar = idsEquivalencia.map(({ id, materiaId }) => {
+        const datosMateria = [
+          {
+            id: 1,
+            nombre: 'Introducción a la Programación',
+            carrera: 'Tecnicatura en informatica',
+            estado: 'pendiente',
+            EquivalenciumId: materiaId,
+          },
+          {
+            id: 2,
+            nombre: 'Gramatica 1',
+            carrera: 'Profesorado de Ingles',
+            estado: 'pendiente',
+            EquivalenciumId: materiaId,
+          },
+          {
+            id: 3,
+            nombre: 'Biologia General',
+            carrera: 'Lic. en Biotecnologia',
+            estado: 'pendiente',
+            EquivalenciumId: materiaId,
+          },
+          {
+            id: 4,
+            nombre: 'Pedagogía I',
+            carrera: 'Lic. en Educacion',
+            estado: 'pendiente',
+            EquivalenciumId: materiaId,
+          },
+          {
+            id: 5,
+            nombre: 'Metalurgia l',
+            carrera: 'Tec. en Metalurgica',
+            estado: 'pendiente',
+            EquivalenciumId: materiaId,
+          },
+        ];
+        return datosMateria.find((materia) => materia.id === id);
+      });
+
+      // Insertar solo si hay registros válidos
+      if (registrosParaInsertar.length > 0) {
+        await queryInterface.bulkInsert(
+          'Materia_solicitada',
+          registrosParaInsertar
+        );
+        console.log('Registros insertados correctamente.');
+      } else {
+        console.log('No hay registros válidos para insertar.');
+      }
     } catch (error) {
       console.error(
         'Error al obtener las materias o insertar registros:',
