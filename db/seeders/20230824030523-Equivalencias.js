@@ -382,6 +382,13 @@ module.exports = {
     const usuarioIds = registrosVálidos.map((registro) => registro.usuarioId);
     const carreraIds = registrosVálidos.map((registro) => registro.carreraId);
 
+    // Verificar que las listas no estén vacías
+    if (usuarioIds.length === 0 || carreraIds.length === 0) {
+      console.log('No hay registros válidos para procesar.');
+      return;
+    }
+
+    // Ejecutar la consulta para obtener los registros existentes
     const existingRecords = await queryInterface.sequelize.query(
       `SELECT "UsuarioId", "CarreraId" 
        FROM "Equivalencia" 
