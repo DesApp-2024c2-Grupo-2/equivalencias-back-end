@@ -171,7 +171,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Función para verificar o insertar registros en la tabla "Universidad_origen"
-    const verificarOInsertarUniversidad = async (id) => {
+    const verificarOInsertarUniversidad = async (id, nombre) => {
       const resultado = await queryInterface.sequelize.query(
         `SELECT id FROM "Universidad_origen" WHERE id = :id`,
         {
@@ -184,9 +184,14 @@ module.exports = {
         console.warn(
           `No se encontró la universidad con id ${id}. Insertando...`
         );
-        // Inserta el registro con solo el campo id, sin la columna "nombre"
+        // Inserta el registro con el id y el nombre de la universidad
         await queryInterface.bulkInsert('Universidad_origen', [
-          { id, createdAt: new Date(), updatedAt: new Date() },
+          {
+            id,
+            nombre_universidad: nombre,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
         ]);
         return id;
       }
@@ -195,12 +200,12 @@ module.exports = {
     };
 
     try {
-      // Verificar o insertar las universidades
-      const cod1 = await verificarOInsertarUniversidad(1);
-      const cod2 = await verificarOInsertarUniversidad(2);
-      const cod3 = await verificarOInsertarUniversidad(3);
-      const cod4 = await verificarOInsertarUniversidad(4);
-      const cod5 = await verificarOInsertarUniversidad(5);
+      // Verificar o insertar las universidades con un nombre ficticio (puedes actualizar los nombres según corresponda)
+      const cod1 = await verificarOInsertarUniversidad(1, 'Universidad A');
+      const cod2 = await verificarOInsertarUniversidad(2, 'Universidad B');
+      const cod3 = await verificarOInsertarUniversidad(3, 'Universidad C');
+      const cod4 = await verificarOInsertarUniversidad(4, 'Universidad D');
+      const cod5 = await verificarOInsertarUniversidad(5, 'Universidad E');
 
       // Crear los registros para la tabla "Materia_aprobada"
       const registrosParaInsertar = [
