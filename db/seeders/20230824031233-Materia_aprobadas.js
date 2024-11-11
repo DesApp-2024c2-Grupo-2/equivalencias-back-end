@@ -256,38 +256,47 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Obtener los ids de las universidades
+    // Verificar las universidades existentes
     const universidades = await queryInterface.sequelize.query(
-      `
-      SELECT id FROM "Universidad_origen" WHERE id IN (1, 2, 3, 4, 5)
-    `,
-      { type: queryInterface.sequelize.QueryTypes.SELECT }
+      `SELECT id FROM "Universidad_origen" WHERE id IN (1, 2, 3, 4, 5)`,
+      {
+        type: queryInterface.sequelize.QueryTypes.SELECT,
+      }
     );
 
-    // Obtener los ids de la tabla "Equivalencia"
-    const equivalencias = await queryInterface.sequelize.query(
-      `
-      SELECT id FROM "Equivalencia" WHERE id IN (1, 2, 3, 4, 5)
-    `,
-      { type: queryInterface.sequelize.QueryTypes.SELECT }
-    );
-
-    if (universidades.length < 5 || equivalencias.length < 5) {
-      throw new Error('Faltan universidades o equivalencias necesarias');
+    // Verificar que todas las universidades necesarias estén presentes
+    if (universidades.length < 5) {
+      throw new Error('Faltan universidades necesarias');
     }
 
-    const cod1 = universidades.find((u) => u.id === 1).id;
-    const cod2 = universidades.find((u) => u.id === 2).id;
-    const cod3 = universidades.find((u) => u.id === 3).id;
-    const cod4 = universidades.find((u) => u.id === 4).id;
-    const cod5 = universidades.find((u) => u.id === 5).id;
+    // Obtener los IDs de las universidades
+    const cod1 = universidades.find((u) => u.id === 1)?.id;
+    const cod2 = universidades.find((u) => u.id === 2)?.id;
+    const cod3 = universidades.find((u) => u.id === 3)?.id;
+    const cod4 = universidades.find((u) => u.id === 4)?.id;
+    const cod5 = universidades.find((u) => u.id === 5)?.id;
 
-    const eq1 = equivalencias.find((e) => e.id === 1).id;
-    const eq2 = equivalencias.find((e) => e.id === 2).id;
-    const eq3 = equivalencias.find((e) => e.id === 3).id;
-    const eq4 = equivalencias.find((e) => e.id === 4).id;
-    const eq5 = equivalencias.find((e) => e.id === 5).id;
+    // Verificar las equivalencias existentes
+    const equivalencias = await queryInterface.sequelize.query(
+      `SELECT id FROM "Equivalencia" WHERE id IN (1, 2, 3, 4, 5)`,
+      {
+        type: queryInterface.sequelize.QueryTypes.SELECT,
+      }
+    );
 
+    // Verificar que todas las equivalencias necesarias estén presentes
+    if (equivalencias.length < 5) {
+      throw new Error('Faltan equivalencias necesarias');
+    }
+
+    // Obtener los IDs de las equivalencias
+    const eq1 = equivalencias.find((e) => e.id === 1)?.id;
+    const eq2 = equivalencias.find((e) => e.id === 2)?.id;
+    const eq3 = equivalencias.find((e) => e.id === 3)?.id;
+    const eq4 = equivalencias.find((e) => e.id === 4)?.id;
+    const eq5 = equivalencias.find((e) => e.id === 5)?.id;
+
+    // Insertar los registros de Materia_aprobada
     await queryInterface.bulkInsert('Materia_aprobada', [
       {
         nota: 7,
