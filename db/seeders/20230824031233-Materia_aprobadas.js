@@ -296,6 +296,58 @@ module.exports = {
     const eq4 = equivalencias.find((e) => e.id === 4)?.id;
     const eq5 = equivalencias.find((e) => e.id === 5)?.id;
 
+    // Si alguna equivalencia falta, insertar las faltantes (opcional)
+    if (!eq1) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 1,
+          nombre: 'Equivalencia 1',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq2) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 2,
+          nombre: 'Equivalencia 2',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq3) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 3,
+          nombre: 'Equivalencia 3',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq4) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 4,
+          nombre: 'Equivalencia 4',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq5) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 5,
+          nombre: 'Equivalencia 5',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+
     // Insertar los registros de Materia_aprobada
     await queryInterface.bulkInsert('Materia_aprobada', [
       {
@@ -358,5 +410,6 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Materia_aprobada', null, {});
+    await queryInterface.bulkDelete('Equivalencia', null, {}); // Eliminar las equivalencias insertadas automáticamente
   },
 };
