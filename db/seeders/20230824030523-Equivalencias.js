@@ -392,6 +392,14 @@ module.exports = {
         type: queryInterface.sequelize.QueryTypes.SELECT,
       }
     );
+    console.log(
+      'usuarioIds:',
+      registrosVálidos.map((registro) => registro.usuarioId)
+    );
+    console.log(
+      'carreraIds:',
+      registrosVálidos.map((registro) => registro.carreraId)
+    );
 
     // Crear un conjunto de registros existentes para evitar duplicados
     const existingRecordsSet = new Set(
