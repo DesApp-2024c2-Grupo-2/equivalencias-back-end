@@ -334,6 +334,21 @@ module.exports = {
         });
       }
 
+      // Obtener los IDs de la tabla "Equivalencia"
+      const equivalenciaIds = await queryInterface.sequelize.query(
+        `SELECT id FROM "Equivalencia"`,
+        { type: queryInterface.sequelize.QueryTypes.SELECT }
+      );
+
+      if (equivalenciaIds.length < 5) {
+        throw new Error(
+          'No hay suficientes registros en la tabla "Equivalencia" para insertar los datos en "Materia_aprobada".'
+        );
+      }
+
+      // Asignar los primeros cinco IDs existentes
+      const [id1, id2, id3, id4, id5] = equivalenciaIds.map((row) => row.id);
+
       // Insertar universidades
       const cod1 = await verificarOInsertarUniversidad(
         1,
@@ -374,7 +389,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Gramática I',
           certificado: true,
-          EquivalenciumId: 1,
+          EquivalenciumId: id1,
           UniversidadOrigenId: cod1,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -385,7 +400,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Programacion 1',
           certificado: true,
-          EquivalenciumId: 2,
+          EquivalenciumId: id2,
           UniversidadOrigenId: cod2,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -396,7 +411,7 @@ module.exports = {
           año_aprobacion: '20201125',
           nombre_materia: 'Quimica General',
           certificado: false,
-          EquivalenciumId: 3,
+          EquivalenciumId: id3,
           UniversidadOrigenId: cod3,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -407,7 +422,7 @@ module.exports = {
           año_aprobacion: '20191120',
           nombre_materia: 'Pedagogía I',
           certificado: false,
-          EquivalenciumId: 4,
+          EquivalenciumId: id4,
           UniversidadOrigenId: cod4,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -418,7 +433,7 @@ module.exports = {
           año_aprobacion: '20181209',
           nombre_materia: 'Programación con Objetos I',
           certificado: true,
-          EquivalenciumId: 5,
+          EquivalenciumId: id5,
           UniversidadOrigenId: cod5,
           createdAt: new Date(),
           updatedAt: new Date(),
