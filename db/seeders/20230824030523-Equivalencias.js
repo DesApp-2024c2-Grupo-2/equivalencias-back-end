@@ -336,7 +336,6 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Definir las verificaciones en un array
     const checks = [
       { usuarioId: 1, carreraNombre: 'Tecnicatura en informatica' },
       { usuarioId: 3, carreraNombre: 'Profesorado de Ingles' },
@@ -345,7 +344,6 @@ module.exports = {
       { usuarioId: 6, carreraNombre: 'Tec. en Metalurgica' },
     ];
 
-    // Buscar todos los usuarios y carreras de una vez
     const usuarios = await queryInterface.sequelize.query(
       `SELECT id FROM "Usuarios" WHERE id IN (1, 3, 4, 5, 6)`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
@@ -356,7 +354,6 @@ module.exports = {
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
 
-    // Crear un mapa de usuarios y carreras para facilitar la búsqueda
     const usuariosMap = usuarios.reduce((acc, usuario) => {
       acc[usuario.id] = usuario.id;
       return acc;
@@ -367,7 +364,6 @@ module.exports = {
       return acc;
     }, {});
 
-    // Filtrar los registros válidos
     const registrosVálidos = checks
       .map(({ usuarioId, carreraNombre }) => ({
         usuarioId,
@@ -377,7 +373,7 @@ module.exports = {
         ({ usuarioId, carreraId }) => usuariosMap[usuarioId] && carreraId
       );
 
-    // Verificar si ya existen registros con las combinaciones UsuarioId y CarreraId
+    // Obtener los registros existentes en la tabla Equivalencia
     const existingRecords = await queryInterface.sequelize.query(
       `SELECT "UsuarioId", "CarreraId" FROM "Equivalencia" WHERE "UsuarioId" IN (:usuarioIds) AND "CarreraId" IN (:carreraIds)`,
       {
@@ -394,21 +390,19 @@ module.exports = {
       existingRecords.map((record) => `${record.UsuarioId}-${record.CarreraId}`)
     );
 
-    // Filtrar registros válidos que no estén ya en la tabla Equivalencia
     const registrosParaInsertar = registrosVálidos.filter(
       ({ usuarioId, carreraId }) =>
         !existingRecordsSet.has(`${usuarioId}-${carreraId}`)
     );
 
-    // Insertar solo los registros no duplicados
     if (registrosParaInsertar.length > 0) {
       await queryInterface.bulkInsert(
         'Equivalencia',
         registrosParaInsertar.map(({ usuarioId, carreraId }) => ({
           instituto: 'Untref',
           estado: 'pendiente',
-          carrera: 'Ingenieria en sistemas', // Puedes personalizar esto según sea necesario
-          observaciones: 'falta analitico', // Puedes personalizar esto según sea necesario
+          carrera: 'Ingenieria en sistemas', // Personaliza esto si es necesario
+          observaciones: 'falta analitico', // Personaliza esto si es necesario
           UsuarioId: usuarioId,
           CarreraId: carreraId,
           createdAt: new Date(),
