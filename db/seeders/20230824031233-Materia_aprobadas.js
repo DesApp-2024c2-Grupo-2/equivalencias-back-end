@@ -234,6 +234,18 @@ module.exports = {
     };
 
     try {
+      // Asegurarse de que la tabla "Equivalencium" existe antes de insertar datos
+      const tablas = await queryInterface.sequelize.query(
+        `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'`,
+        { type: queryInterface.sequelize.QueryTypes.SELECT }
+      );
+
+      if (!tablas.some((table) => table.table_name === 'Equivalencium')) {
+        throw new Error(
+          'La tabla "Equivalencium" no existe en la base de datos.'
+        );
+      }
+
       // Insertar los equivalentes
       const equi1 = await insertarEquivalencium(1, 'Equivalente A');
       const equi2 = await insertarEquivalencium(2, 'Equivalente B');
@@ -281,7 +293,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Gramática I',
           certificado: true,
-          EquivalenciumId: equi1, // Asignar el ID correcto del equivalente
+          EquivalenciumId: equi1,
           UniversidadOrigenId: cod1,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -292,7 +304,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Programacion 1',
           certificado: true,
-          EquivalenciumId: equi2, // Asignar el ID correcto del equivalente
+          EquivalenciumId: equi2,
           UniversidadOrigenId: cod2,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -303,7 +315,7 @@ module.exports = {
           año_aprobacion: '20201125',
           nombre_materia: 'Quimica General',
           certificado: false,
-          EquivalenciumId: equi3, // Asignar el ID correcto del equivalente
+          EquivalenciumId: equi3,
           UniversidadOrigenId: cod3,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -314,7 +326,7 @@ module.exports = {
           año_aprobacion: '20191120',
           nombre_materia: 'Pedagogía I',
           certificado: false,
-          EquivalenciumId: equi4, // Asignar el ID correcto del equivalente
+          EquivalenciumId: equi4,
           UniversidadOrigenId: cod4,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -325,7 +337,7 @@ module.exports = {
           año_aprobacion: '20181209',
           nombre_materia: 'Programación con Objetos I',
           certificado: true,
-          EquivalenciumId: equi5, // Asignar el ID correcto del equivalente
+          EquivalenciumId: equi5,
           UniversidadOrigenId: cod5,
           createdAt: new Date(),
           updatedAt: new Date(),
