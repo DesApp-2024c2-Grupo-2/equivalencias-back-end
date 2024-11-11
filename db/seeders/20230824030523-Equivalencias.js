@@ -338,11 +338,46 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Definir las verificaciones en un array
     const checks = [
-      { usuarioId: 369, carreraNombre: 'Tecnicatura en informatica' },
-      { usuarioId: 370, carreraNombre: 'Profesorado de Ingles' },
-      { usuarioId: 371, carreraNombre: 'Lic. en Biotecnologia' },
-      { usuarioId: 372, carreraNombre: 'Lic. en Educacion' },
-      { usuarioId: 373, carreraNombre: 'Tec. en Metalurgica' },
+      {
+        usuarioId: 369,
+        carreraNombre: 'Tecnicatura en informatica',
+        carrera: 'Ingenieria en sistemas',
+        observaciones: 'falta analitico',
+        instituto: 'UnTref',
+        estado: 'pendiente',
+      },
+      {
+        usuarioId: 370,
+        carreraNombre: 'Profesorado de Ingles',
+        carrera: 'Lic. en Educacion',
+        observaciones: 'falta dni',
+        instituto: 'UTN',
+        estado: 'pendiente',
+      },
+      {
+        usuarioId: 371,
+        carreraNombre: 'Lic. en Biotecnologia',
+        carrera: 'Lic. en Biotecnologia',
+        observaciones: 'falta analitico en equivalencia',
+        instituto: 'UnLAM',
+        estado: 'pendiente',
+      },
+      {
+        usuarioId: 372,
+        carreraNombre: 'Lic. en Educacion',
+        carrera: 'Lic. en Educacion',
+        observaciones: 'falta dni',
+        instituto: 'UnSAM',
+        estado: 'pendiente',
+      },
+      {
+        usuarioId: 373,
+        carreraNombre: 'Tec. en Metalurgica',
+        carrera: 'Tec. en Metalurgica',
+        observaciones: 'no hay observaciones en equivalencia',
+        instituto: 'UBA',
+        estado: 'pendiente',
+      },
     ];
 
     // Obtener usuarios
@@ -375,9 +410,11 @@ module.exports = {
 
     // Filtrar registros válidos
     const registrosVálidos = checks
-      .map(({ usuarioId, carreraNombre }) => ({
+      .map(({ usuarioId, carreraNombre, carrera, observaciones }) => ({
         usuarioId,
         carreraId: carrerasMap[carreraNombre],
+        carrera,
+        observaciones,
       }))
       .filter(
         ({ usuarioId, carreraId }) => usuariosMap[usuarioId] && carreraId
@@ -387,13 +424,20 @@ module.exports = {
 
     // Verifica si hay registros válidos antes de intentar insertar
     if (registrosVálidos.length > 0) {
-      // Preparar datos para la inserción
+      // Preparar datos para la inserción con datos dinámicos
       const datosParaInsertar = registrosVálidos.map(
-        ({ usuarioId, carreraId }) => ({
-          instituto: 'Untref',
-          estado: 'pendiente',
-          carrera: 'Ingenieria en sistemas',
-          observaciones: 'falta analitico',
+        ({
+          usuarioId,
+          carreraId,
+          carrera,
+          observaciones,
+          instituto,
+          estado,
+        }) => ({
+          instituto,
+          estado,
+          carrera,
+          observaciones,
           UsuarioId: usuarioId,
           CarreraId: carreraId,
           createdAt: new Date(),
