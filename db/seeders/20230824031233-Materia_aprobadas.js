@@ -189,13 +189,40 @@ module.exports = {
         console.warn(
           `No se encontró la universidad con id ${id}. Insertando...`
         );
-        // Inserta el registro con el id, nombre, localidad y sigla
         await queryInterface.bulkInsert('Universidad_origen', [
           {
             id,
             nombre_universidad: nombre,
-            localidad: localidad, // Añadir localidad
-            sigla: sigla, // Añadir sigla
+            localidad: localidad,
+            sigla: sigla,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ]);
+        return id;
+      }
+
+      return resultado[0].id;
+    };
+
+    // Función para insertar los registros de "Equivalencium"
+    const insertarEquivalencium = async (id, nombre) => {
+      const resultado = await queryInterface.sequelize.query(
+        `SELECT id FROM "Equivalencium" WHERE id = :id`,
+        {
+          replacements: { id },
+          type: queryInterface.sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      if (resultado.length === 0) {
+        console.warn(
+          `No se encontró el equivalente con id ${id}. Insertando...`
+        );
+        await queryInterface.bulkInsert('Equivalencium', [
+          {
+            id,
+            nombre: nombre,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -207,7 +234,14 @@ module.exports = {
     };
 
     try {
-      // Verificar o insertar las universidades con el nombre, localidad y sigla
+      // Insertar los equivalentes
+      const equi1 = await insertarEquivalencium(1, 'Equivalente A');
+      const equi2 = await insertarEquivalencium(2, 'Equivalente B');
+      const equi3 = await insertarEquivalencium(3, 'Equivalente C');
+      const equi4 = await insertarEquivalencium(4, 'Equivalente D');
+      const equi5 = await insertarEquivalencium(5, 'Equivalente E');
+
+      // Insertar universidades
       const cod1 = await verificarOInsertarUniversidad(
         1,
         'Universidad A',
@@ -247,7 +281,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Gramática I',
           certificado: true,
-          EquivalenciumId: 1,
+          EquivalenciumId: equi1, // Asignar el ID correcto del equivalente
           UniversidadOrigenId: cod1,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -258,7 +292,7 @@ module.exports = {
           año_aprobacion: '20151003',
           nombre_materia: 'Programacion 1',
           certificado: true,
-          EquivalenciumId: 2,
+          EquivalenciumId: equi2, // Asignar el ID correcto del equivalente
           UniversidadOrigenId: cod2,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -269,7 +303,7 @@ module.exports = {
           año_aprobacion: '20201125',
           nombre_materia: 'Quimica General',
           certificado: false,
-          EquivalenciumId: 3,
+          EquivalenciumId: equi3, // Asignar el ID correcto del equivalente
           UniversidadOrigenId: cod3,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -280,7 +314,7 @@ module.exports = {
           año_aprobacion: '20191120',
           nombre_materia: 'Pedagogía I',
           certificado: false,
-          EquivalenciumId: 4,
+          EquivalenciumId: equi4, // Asignar el ID correcto del equivalente
           UniversidadOrigenId: cod4,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -291,7 +325,7 @@ module.exports = {
           año_aprobacion: '20181209',
           nombre_materia: 'Programación con Objetos I',
           certificado: true,
-          EquivalenciumId: 5,
+          EquivalenciumId: equi5, // Asignar el ID correcto del equivalente
           UniversidadOrigenId: cod5,
           createdAt: new Date(),
           updatedAt: new Date(),
