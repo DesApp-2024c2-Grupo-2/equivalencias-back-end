@@ -338,11 +338,11 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Definir las verificaciones en un array
     const checks = [
-      { usuarioId: 1, carreraNombre: 'Tecnicatura en informatica' },
-      { usuarioId: 3, carreraNombre: 'Profesorado de Ingles' },
-      { usuarioId: 4, carreraNombre: 'Lic. en Biotecnologia' },
-      { usuarioId: 5, carreraNombre: 'Lic. en Educacion' },
-      { usuarioId: 6, carreraNombre: 'Tec. en Metalurgica' },
+      { usuarioId: 369, carreraNombre: 'Tecnicatura en informatica' },
+      { usuarioId: 370, carreraNombre: 'Profesorado de Ingles' },
+      { usuarioId: 371, carreraNombre: 'Lic. en Biotecnologia' },
+      { usuarioId: 372, carreraNombre: 'Lic. en Educacion' },
+      { usuarioId: 373, carreraNombre: 'Tec. en Metalurgica' },
     ];
 
     // Obtener usuarios
@@ -350,12 +350,14 @@ module.exports = {
       `SELECT id FROM "Usuarios" WHERE id IN (369, 370, 371, 372, 373)`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
+    console.log('Usuarios obtenidos:', usuarios);
 
     // Obtener carreras
     const carreras = await queryInterface.sequelize.query(
       `SELECT id, nombre_carrera FROM "Carrera" WHERE nombre_carrera IN ('Tecnicatura en informatica', 'Profesorado de Ingles', 'Lic. en Biotecnologia', 'Lic. en Educacion', 'Tec. en Metalurgica')`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
+    console.log('Carreras obtenidas:', carreras);
 
     // Crear mapas de usuarios y carreras para facilitar el acceso a los IDs
     const usuariosMap = usuarios.reduce((acc, usuario) => {
@@ -368,6 +370,9 @@ module.exports = {
       return acc;
     }, {});
 
+    console.log('Mapa de usuarios:', usuariosMap);
+    console.log('Mapa de carreras:', carrerasMap);
+
     // Filtrar registros válidos
     const registrosVálidos = checks
       .map(({ usuarioId, carreraNombre }) => ({
@@ -378,15 +383,17 @@ module.exports = {
         ({ usuarioId, carreraId }) => usuariosMap[usuarioId] && carreraId
       );
 
+    console.log('Registros válidos para insertar:', registrosVálidos);
+
     // Verifica si hay registros válidos antes de intentar insertar
     if (registrosVálidos.length > 0) {
       // Preparar datos para la inserción
       const datosParaInsertar = registrosVálidos.map(
         ({ usuarioId, carreraId }) => ({
-          instituto: 'Untref', // Personaliza según tus necesidades
-          estado: 'pendiente', // Personaliza según tus necesidades
-          carrera: 'Ingenieria en sistemas', // Personaliza según tus necesidades
-          observaciones: 'falta analitico', // Personaliza según tus necesidades
+          instituto: 'Untref',
+          estado: 'pendiente',
+          carrera: 'Ingenieria en sistemas',
+          observaciones: 'falta analitico',
           UsuarioId: usuarioId,
           CarreraId: carreraId,
           createdAt: new Date(),
