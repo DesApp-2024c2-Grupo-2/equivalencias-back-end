@@ -5,7 +5,8 @@ module.exports = {
     const [uniOrigen] = await queryInterface.sequelize.query(
       `SELECT * FROM "Universidad_origen" WHERE sigla = 'UTN';`
     );
-    if (!uniOrigen) {
+
+    if (uniOrigen.length === 0) {
       await queryInterface.bulkInsert('Universidad_origen', [
         {
           nombre_universidad: 'Universidad Tecnológica Nacional',
@@ -15,7 +16,6 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-
         {
           nombre_universidad: 'Universidad de Buenos Aires',
           localidad: 'CABA',
@@ -32,7 +32,6 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-
         {
           nombre_universidad: 'Universidad Nacional de San Martin',
           localidad: 'San Martin',
@@ -41,7 +40,6 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-
         {
           nombre_universidad: 'Universidad Nacional de La Plata',
           localidad: 'San Martin',
@@ -50,16 +48,6 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-
-        {
-          nombre_universidad: 'Universidad de Buenos Aires',
-          localidad: 'CABA',
-          sigla: 'UBA',
-          disabled: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-
         {
           nombre_universidad: 'Universidad de Morón',
           localidad: 'Moron',
@@ -85,7 +73,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          nombre_universidad: 'Instituto Don torcuato di tella',
+          nombre_universidad: 'Instituto Don Torcuato Di Tella',
           localidad: 'CABA',
           sigla: 'ITDT',
           disabled: false,
@@ -94,7 +82,7 @@ module.exports = {
         },
       ]);
     } else {
-      console.log('El usuario ya existe. No se insertó.');
+      console.log('El registro ya existe. No se insertó.');
     }
   },
 
