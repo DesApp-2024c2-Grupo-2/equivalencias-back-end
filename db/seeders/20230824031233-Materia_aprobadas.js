@@ -289,17 +289,62 @@ module.exports = {
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 
-      // Verificar que las tablas "Universidad_origen" y "Equivalencia" existan
+      // Verificar si la tabla "Universidad_origen" existe, sino crearla
       if (!tablas.some((table) => table.table_name === 'Universidad_origen')) {
-        throw new Error(
-          'La tabla "Universidad_origen" no existe en la base de datos.'
-        );
+        console.warn('La tabla "Universidad_origen" no existe. Creándola...');
+        await queryInterface.createTable('Universidad_origen', {
+          id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            allowNull: false,
+            autoIncrement: true,
+          },
+          nombre_universidad: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          localidad: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          sigla: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          createdAt: {
+            type: Sequelize.DATE,
+            allowNull: false,
+          },
+          updatedAt: {
+            type: Sequelize.DATE,
+            allowNull: false,
+          },
+        });
       }
 
+      // Verificar si la tabla "Equivalencia" existe, sino crearla
       if (!tablas.some((table) => table.table_name === 'Equivalencia')) {
-        throw new Error(
-          'La tabla "Equivalencia" no existe en la base de datos.'
-        );
+        console.warn('La tabla "Equivalencia" no existe. Creándola...');
+        await queryInterface.createTable('Equivalencia', {
+          id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            allowNull: false,
+            autoIncrement: true,
+          },
+          nombre: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          createdAt: {
+            type: Sequelize.DATE,
+            allowNull: false,
+          },
+          updatedAt: {
+            type: Sequelize.DATE,
+            allowNull: false,
+          },
+        });
       }
 
       // Insertar los equivalentes
