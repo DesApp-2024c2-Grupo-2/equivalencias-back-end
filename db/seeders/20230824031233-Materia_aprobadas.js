@@ -59,6 +59,166 @@
 
 /*module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // Verificar las universidades existentes
+    const universidades = await queryInterface.sequelize.query(
+      `SELECT id FROM "Universidad_origen" WHERE id IN (1, 2, 3, 4, 5)`,
+      {
+        type: queryInterface.sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    // Verificar que todas las universidades necesarias estén presentes
+    if (universidades.length < 5) {
+      throw new Error('Faltan universidades necesarias');
+    }
+
+    // Obtener los IDs de las universidades
+    const cod1 = universidades.find((u) => u.id === 1)?.id;
+    const cod2 = universidades.find((u) => u.id === 2)?.id;
+    const cod3 = universidades.find((u) => u.id === 3)?.id;
+    const cod4 = universidades.find((u) => u.id === 4)?.id;
+    const cod5 = universidades.find((u) => u.id === 5)?.id;
+
+    // Verificar las equivalencias existentes
+    const equivalencias = await queryInterface.sequelize.query(
+      `SELECT id FROM "Equivalencia" WHERE id IN (1, 2, 3, 4, 5)`,
+      {
+        type: queryInterface.sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    // Verificar que todas las equivalencias necesarias estén presentes
+    if (equivalencias.length < 5) {
+      throw new Error('Faltan equivalencias necesarias');
+    }
+
+    // Obtener los IDs de las equivalencias
+    const eq1 = equivalencias.find((e) => e.id === 1)?.id;
+    const eq2 = equivalencias.find((e) => e.id === 2)?.id;
+    const eq3 = equivalencias.find((e) => e.id === 3)?.id;
+    const eq4 = equivalencias.find((e) => e.id === 4)?.id;
+    const eq5 = equivalencias.find((e) => e.id === 5)?.id;
+
+    // Si alguna equivalencia falta, insertar las faltantes (opcional)
+    if (!eq1) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 1,
+          nombre: 'Equivalencia 1',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq2) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 2,
+          nombre: 'Equivalencia 2',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq3) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 3,
+          nombre: 'Equivalencia 3',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq4) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 4,
+          nombre: 'Equivalencia 4',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+    if (!eq5) {
+      await queryInterface.bulkInsert('Equivalencia', [
+        {
+          id: 5,
+          nombre: 'Equivalencia 5',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+
+    // Insertar los registros de Materia_aprobada
+    await queryInterface.bulkInsert('Materia_aprobada', [
+      {
+        nota: 7,
+        carga_horaria: 8,
+        año_aprobacion: '20151003',
+        nombre_materia: 'Gramática I',
+        certificado: true,
+        EquivalenciumId: eq1,
+        UniversidadOrigenId: cod1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        nota: 9,
+        carga_horaria: 8,
+        año_aprobacion: '20151003',
+        nombre_materia: 'Programacion 1',
+        certificado: true,
+        EquivalenciumId: eq2,
+        UniversidadOrigenId: cod2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        nota: 7,
+        carga_horaria: 6,
+        año_aprobacion: '20201125',
+        nombre_materia: 'Quimica General',
+        certificado: false,
+        EquivalenciumId: eq3,
+        UniversidadOrigenId: cod3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        nota: 8,
+        carga_horaria: 8,
+        año_aprobacion: '20191120',
+        nombre_materia: 'Pedagogía I',
+        certificado: false,
+        EquivalenciumId: eq4,
+        UniversidadOrigenId: cod4,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        nota: 9,
+        carga_horaria: 8,
+        año_aprobacion: '20181209',
+        nombre_materia: 'Programación con Objetos I',
+        certificado: true,
+        EquivalenciumId: eq5,
+        UniversidadOrigenId: cod5,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+  },
+
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete('Materia_aprobada', null, {});
+    await queryInterface.bulkDelete('Equivalencia', null, {}); // Eliminar las equivalencias insertadas automáticamente
+  },
+};*/
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
     // Función para verificar o insertar registros en la tabla "Universidad_origen"
     const verificarOInsertarUniversidad = async (
       id,
@@ -251,165 +411,5 @@
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Materia_aprobada', null, {});
-  },
-};*/
-
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // Verificar las universidades existentes
-    const universidades = await queryInterface.sequelize.query(
-      `SELECT id FROM "Universidad_origen" WHERE id IN (1, 2, 3, 4, 5)`,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
-    );
-
-    // Verificar que todas las universidades necesarias estén presentes
-    if (universidades.length < 5) {
-      throw new Error('Faltan universidades necesarias');
-    }
-
-    // Obtener los IDs de las universidades
-    const cod1 = universidades.find((u) => u.id === 1)?.id;
-    const cod2 = universidades.find((u) => u.id === 2)?.id;
-    const cod3 = universidades.find((u) => u.id === 3)?.id;
-    const cod4 = universidades.find((u) => u.id === 4)?.id;
-    const cod5 = universidades.find((u) => u.id === 5)?.id;
-
-    // Verificar las equivalencias existentes
-    const equivalencias = await queryInterface.sequelize.query(
-      `SELECT id FROM "Equivalencia" WHERE id IN (1, 2, 3, 4, 5)`,
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-      }
-    );
-
-    // Verificar que todas las equivalencias necesarias estén presentes
-    if (equivalencias.length < 5) {
-      throw new Error('Faltan equivalencias necesarias');
-    }
-
-    // Obtener los IDs de las equivalencias
-    const eq1 = equivalencias.find((e) => e.id === 1)?.id;
-    const eq2 = equivalencias.find((e) => e.id === 2)?.id;
-    const eq3 = equivalencias.find((e) => e.id === 3)?.id;
-    const eq4 = equivalencias.find((e) => e.id === 4)?.id;
-    const eq5 = equivalencias.find((e) => e.id === 5)?.id;
-
-    // Si alguna equivalencia falta, insertar las faltantes (opcional)
-    if (!eq1) {
-      await queryInterface.bulkInsert('Equivalencia', [
-        {
-          id: 1,
-          nombre: 'Equivalencia 1',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
-    }
-    if (!eq2) {
-      await queryInterface.bulkInsert('Equivalencia', [
-        {
-          id: 2,
-          nombre: 'Equivalencia 2',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
-    }
-    if (!eq3) {
-      await queryInterface.bulkInsert('Equivalencia', [
-        {
-          id: 3,
-          nombre: 'Equivalencia 3',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
-    }
-    if (!eq4) {
-      await queryInterface.bulkInsert('Equivalencia', [
-        {
-          id: 4,
-          nombre: 'Equivalencia 4',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
-    }
-    if (!eq5) {
-      await queryInterface.bulkInsert('Equivalencia', [
-        {
-          id: 5,
-          nombre: 'Equivalencia 5',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
-    }
-
-    // Insertar los registros de Materia_aprobada
-    await queryInterface.bulkInsert('Materia_aprobada', [
-      {
-        nota: 7,
-        carga_horaria: 8,
-        año_aprobacion: '20151003',
-        nombre_materia: 'Gramática I',
-        certificado: true,
-        EquivalenciumId: eq1,
-        UniversidadOrigenId: cod1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 9,
-        carga_horaria: 8,
-        año_aprobacion: '20151003',
-        nombre_materia: 'Programacion 1',
-        certificado: true,
-        EquivalenciumId: eq2,
-        UniversidadOrigenId: cod2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 7,
-        carga_horaria: 6,
-        año_aprobacion: '20201125',
-        nombre_materia: 'Quimica General',
-        certificado: false,
-        EquivalenciumId: eq3,
-        UniversidadOrigenId: cod3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 8,
-        carga_horaria: 8,
-        año_aprobacion: '20191120',
-        nombre_materia: 'Pedagogía I',
-        certificado: false,
-        EquivalenciumId: eq4,
-        UniversidadOrigenId: cod4,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        nota: 9,
-        carga_horaria: 8,
-        año_aprobacion: '20181209',
-        nombre_materia: 'Programación con Objetos I',
-        certificado: true,
-        EquivalenciumId: eq5,
-        UniversidadOrigenId: cod5,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ]);
-  },
-
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Materia_aprobada', null, {});
-    await queryInterface.bulkDelete('Equivalencia', null, {}); // Eliminar las equivalencias insertadas automáticamente
   },
 };
