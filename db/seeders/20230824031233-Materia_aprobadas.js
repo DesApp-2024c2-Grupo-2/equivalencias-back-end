@@ -171,7 +171,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Función para verificar o insertar registros en la tabla "Universidad_origen"
-    const verificarOInsertarUniversidad = async (id, nombre) => {
+    const verificarOInsertarUniversidad = async (id) => {
       const resultado = await queryInterface.sequelize.query(
         `SELECT id FROM "Universidad_origen" WHERE id = :id`,
         {
@@ -184,9 +184,9 @@ module.exports = {
         console.warn(
           `No se encontró la universidad con id ${id}. Insertando...`
         );
-        // Inserta el registro si no existe
+        // Inserta el registro con solo el campo id, sin la columna "nombre"
         await queryInterface.bulkInsert('Universidad_origen', [
-          { id, nombre, createdAt: new Date(), updatedAt: new Date() },
+          { id, createdAt: new Date(), updatedAt: new Date() },
         ]);
         return id;
       }
@@ -196,11 +196,11 @@ module.exports = {
 
     try {
       // Verificar o insertar las universidades
-      const cod1 = await verificarOInsertarUniversidad(1, 'Universidad 1');
-      const cod2 = await verificarOInsertarUniversidad(2, 'Universidad 2');
-      const cod3 = await verificarOInsertarUniversidad(3, 'Universidad 3');
-      const cod4 = await verificarOInsertarUniversidad(4, 'Universidad 4');
-      const cod5 = await verificarOInsertarUniversidad(5, 'Universidad 5');
+      const cod1 = await verificarOInsertarUniversidad(1);
+      const cod2 = await verificarOInsertarUniversidad(2);
+      const cod3 = await verificarOInsertarUniversidad(3);
+      const cod4 = await verificarOInsertarUniversidad(4);
+      const cod5 = await verificarOInsertarUniversidad(5);
 
       // Crear los registros para la tabla "Materia_aprobada"
       const registrosParaInsertar = [
