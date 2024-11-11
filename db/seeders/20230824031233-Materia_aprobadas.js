@@ -171,7 +171,12 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Función para verificar o insertar registros en la tabla "Universidad_origen"
-    const verificarOInsertarUniversidad = async (id, nombre, localidad) => {
+    const verificarOInsertarUniversidad = async (
+      id,
+      nombre,
+      localidad,
+      sigla
+    ) => {
       const resultado = await queryInterface.sequelize.query(
         `SELECT id FROM "Universidad_origen" WHERE id = :id`,
         {
@@ -184,12 +189,13 @@ module.exports = {
         console.warn(
           `No se encontró la universidad con id ${id}. Insertando...`
         );
-        // Inserta el registro con el id, nombre y localidad
+        // Inserta el registro con el id, nombre, localidad y sigla
         await queryInterface.bulkInsert('Universidad_origen', [
           {
             id,
             nombre_universidad: nombre,
             localidad: localidad, // Añadir localidad
+            sigla: sigla, // Añadir sigla
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -201,31 +207,36 @@ module.exports = {
     };
 
     try {
-      // Verificar o insertar las universidades con el nombre y la localidad
+      // Verificar o insertar las universidades con el nombre, localidad y sigla
       const cod1 = await verificarOInsertarUniversidad(
         1,
         'Universidad A',
-        'Ciudad A'
+        'Ciudad A',
+        'UA'
       );
       const cod2 = await verificarOInsertarUniversidad(
         2,
         'Universidad B',
-        'Ciudad B'
+        'Ciudad B',
+        'UB'
       );
       const cod3 = await verificarOInsertarUniversidad(
         3,
         'Universidad C',
-        'Ciudad C'
+        'Ciudad C',
+        'UC'
       );
       const cod4 = await verificarOInsertarUniversidad(
         4,
         'Universidad D',
-        'Ciudad D'
+        'Ciudad D',
+        'UD'
       );
       const cod5 = await verificarOInsertarUniversidad(
         5,
         'Universidad E',
-        'Ciudad E'
+        'Ciudad E',
+        'UE'
       );
 
       // Crear los registros para la tabla "Materia_aprobada"
