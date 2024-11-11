@@ -93,3 +93,5 @@ module.exports = {
     await queryInterface.bulkDelete('Mensajes', null, {});
   },
 };
+/*PARA DESPLEGAR EN RENDER HAY QUE MODIFICAR ESTE CODIGO YA QUE NO 
+CARGA LOS DATOS EN LA BASE DE RENDER. NO LO HICE PORQUE NO ES PRIORIDAD*/

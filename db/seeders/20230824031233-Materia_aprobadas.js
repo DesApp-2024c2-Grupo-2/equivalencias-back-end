@@ -182,20 +182,23 @@ module.exports = {
 
       // Verificar si la consulta devolvió resultados
       if (resultado.length === 0) {
-        throw new Error(`No se encontró la universidad con id ${id}`);
+        console.warn(`Advertencia: No se encontró la universidad con id ${id}`);
+        return null; // Devolver null si no se encuentra
       }
 
       return resultado[0].id;
     };
 
     try {
+      // Obtener los IDs de las universidades
       const cod1 = await obtenerUniversidadId(1);
       const cod2 = await obtenerUniversidadId(2);
       const cod3 = await obtenerUniversidadId(3);
       const cod4 = await obtenerUniversidadId(4);
       const cod5 = await obtenerUniversidadId(5);
 
-      await queryInterface.bulkInsert('Materia_aprobada', [
+      // Crear los registros solo si los IDs son válidos
+      const registrosParaInsertar = [
         {
           nota: 7,
           carga_horaria: 8,
@@ -251,7 +254,18 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-      ]);
+      ].filter((registro) => registro.UniversidadOrigenId !== null); // Filtrar los registros inválidos
+
+      // Insertar solo si hay registros válidos
+      if (registrosParaInsertar.length > 0) {
+        await queryInterface.bulkInsert(
+          'Materia_aprobada',
+          registrosParaInsertar
+        );
+        console.log('Registros insertados correctamente.');
+      } else {
+        console.log('No hay registros válidos para insertar.');
+      }
     } catch (error) {
       console.error(
         'Error al obtener las universidades o insertar registros:',
