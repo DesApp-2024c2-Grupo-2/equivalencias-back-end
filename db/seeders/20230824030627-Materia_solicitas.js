@@ -125,52 +125,34 @@ module.exports = {
       for (let id = 284; id <= 288; id++) {
         const materiaId = await obtenerMateriaId(id);
         if (materiaId) {
-          idsEquivalencia.push({ id, materiaId });
+          idsEquivalencia.push(materiaId);
         } else {
           console.warn(`Advertencia: No se encontró la materia con id ${id}`);
         }
       }
 
       // Crear los registros solo para las IDs que se encontraron
-      const registrosParaInsertar = idsEquivalencia.map(({ id, materiaId }) => {
-        const datosMateria = [
-          {
-            id: 1,
-            nombre: 'Introducción a la Programación',
-            carrera: 'Tecnicatura en informatica',
-            estado: 'pendiente',
-            EquivalenciumId: materiaId,
-          },
-          {
-            id: 2,
-            nombre: 'Gramatica 1',
-            carrera: 'Profesorado de Ingles',
-            estado: 'pendiente',
-            EquivalenciumId: materiaId,
-          },
-          {
-            id: 3,
-            nombre: 'Biologia General',
-            carrera: 'Lic. en Biotecnologia',
-            estado: 'pendiente',
-            EquivalenciumId: materiaId,
-          },
-          {
-            id: 4,
-            nombre: 'Pedagogía I',
-            carrera: 'Lic. en Educacion',
-            estado: 'pendiente',
-            EquivalenciumId: materiaId,
-          },
-          {
-            id: 5,
-            nombre: 'Metalurgia l',
-            carrera: 'Tec. en Metalurgica',
-            estado: 'pendiente',
-            EquivalenciumId: materiaId,
-          },
-        ];
-        return datosMateria.find((materia) => materia.id === id);
+      const registrosParaInsertar = idsEquivalencia.map((materiaId, index) => {
+        return {
+          nombre: [
+            'Introducción a la Programación',
+            'Gramatica 1',
+            'Biologia General',
+            'Pedagogía I',
+            'Metalurgia l',
+          ][index],
+          carrera: [
+            'Tecnicatura en informatica',
+            'Profesorado de Ingles',
+            'Lic. en Biotecnologia',
+            'Lic. en Educacion',
+            'Tec. en Metalurgica',
+          ][index],
+          estado: 'pendiente',
+          EquivalenciumId: materiaId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
       });
 
       // Insertar solo si hay registros válidos
